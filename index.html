@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuel Form — Performance Nutrition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --black:#0a0a0a;
+  --white:#f5f3ee;
+  --mid:#141414;
+  --mid2:#1c1c1c;
+  --border:rgba(245,243,238,0.1);
+  --dim:rgba(245,243,238,0.45);
+  --dim2:rgba(245,243,238,0.7);
+
+  /* product accents */
+  --elite:#D4962A;
+  --elite-l:#E8A840;
+  --lifestyle:#1D9E75;
+  --body:#B03A2E;
+  --teams:#378ADD;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;min-height:100vh}
+
+/* ── NAV ──────────────────────────────────────────────────── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:64px;
+  background:rgba(10,10,10,0.92);
+  border-bottom:.5px solid var(--border);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;flex-shrink:0}
+
+/* SVG wordmark inline */
+.nav-logo svg{height:32px;width:auto}
+
+.nav-links{display:flex;align-items:center;gap:0}
+.nav-link{
+  font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;padding:0 18px;height:64px;
+  display:flex;align-items:center;border-bottom:2px solid transparent;
+  transition:color .2s,border-color .2s;cursor:pointer;
+  position:relative;
+}
+.nav-link:hover{color:var(--white)}
+.nav-link.active{color:var(--white);border-bottom-color:var(--white)}
+.nav-link.active-elite{color:var(--elite);border-bottom-color:var(--elite)}
+
+.nav-right{display:flex;align-items:center;gap:16px;flex-shrink:0}
+.nav-signin{
+  font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--dim);cursor:pointer;padding:8px 16px;border:.5px solid var(--border);
+  transition:all .2s;text-decoration:none;
+}
+.nav-signin:hover{color:var(--white);border-color:rgba(245,243,238,0.3)}
+
+.nav-cta{
+  font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;
+  background:var(--elite);color:var(--black);padding:10px 20px;
+  border:none;cursor:pointer;transition:background .2s;text-decoration:none;
+}
+.nav-cta:hover{background:var(--elite-l)}
+
+/* ── FOOTER ───────────────────────────────────────────────── */
+#footer{
+  border-top:.5px solid var(--border);
+  padding:60px 48px 40px;
+  margin-top:120px;
+}
+.footer-top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand svg{height:28px;width:auto;margin-bottom:16px}
+.footer-tagline{font-size:13px;color:var(--dim);line-height:1.7;max-width:260px}
+.footer-col-label{font-size:10px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);margin-bottom:16px;display:block}
+.footer-link{display:block;font-size:13px;color:var(--dim);margin-bottom:10px;cursor:pointer;transition:color .2s;text-decoration:none}
+.footer-link:hover{color:var(--white)}
+.footer-link .cs-badge{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);border:.5px solid var(--border);padding:2px 6px;margin-left:8px;vertical-align:middle}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:.5px solid var(--border)}
+.footer-legal{font-size:11px;color:rgba(245,243,238,0.25);line-height:1.6;max-width:560px}
+.footer-copy{font-size:11px;color:rgba(245,243,238,0.2);flex-shrink:0}
+
+/* ── PAGE WRAPPER ─────────────────────────────────────────── */
+#page{padding-top:64px;min-height:calc(100vh - 64px)}
+.container{max-width:960px;margin:0 auto;padding:0 48px}
+
+/* ── ANIMATIONS ───────────────────────────────────────────── */
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.anim{opacity:0;animation:up .6s ease forwards}
+.anim-1{animation-delay:.05s}.anim-2{animation-delay:.15s}.anim-3{animation-delay:.25s}
+.anim-4{animation-delay:.35s}.anim-5{animation-delay:.45s}.anim-6{animation-delay:.55s}
+
+/* ── DIVIDER ──────────────────────────────────────────────── */
+.divider{display:flex;align-items:center;gap:16px;margin:64px 0}
+.divider-line{flex:1;height:.5px;background:var(--border)}
+.divider-label{font-size:10px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+
+/* ── HOME PAGE ────────────────────────────────────────────── */
+.home-hero{padding:100px 0 80px;position:relative}
+.home-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:28px}
+.home-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(72px,10vw,120px);line-height:.92;letter-spacing:.02em;margin-bottom:32px;color:var(--white)}
+.home-sub{font-size:17px;font-weight:300;color:var(--dim2);max-width:520px;line-height:1.75;border-left:1px solid rgba(245,243,238,0.15);padding-left:20px}
+
+/* product cards */
+.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:80px 0}
+.product-card{
+  padding:36px 32px 40px;background:var(--mid);border:.5px solid var(--border);
+  position:relative;overflow:hidden;cursor:pointer;transition:background .2s;
+}
+.product-card:hover{background:rgba(245,243,238,0.03)}
+.product-card.coming{cursor:default;opacity:.55}
+.product-card.coming:hover{background:var(--mid)}
+.pc-accent{height:2px;width:100%;position:absolute;top:0;left:0;transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
+.product-card:not(.coming):hover .pc-accent{transform:scaleX(1)}
+.pc-tag{font-size:9px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.pc-cs{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border:.5px solid var(--border);color:var(--dim)}
+.pc-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.04em;margin-bottom:10px;line-height:1}
+.pc-sub{font-size:13px;color:var(--dim);line-height:1.6;margin-bottom:24px}
+.pc-user{font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--dim);margin-bottom:28px}
+.pc-cta{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;transition:gap .2s}
+.product-card:not(.coming):hover .pc-cta{gap:14px}
+
+/* statement */
+.home-statement{padding:60px 52px;border:.5px solid var(--border);background:rgba(245,243,238,0.02);position:relative;margin:80px 0}
+.home-statement::before{content:'"';font-family:'Bebas Neue',sans-serif;font-size:220px;color:rgba(245,243,238,0.04);position:absolute;top:-50px;left:28px;line-height:1;pointer-events:none;user-select:none}
+.home-statement p{font-size:clamp(18px,2.5vw,26px);font-weight:300;font-style:italic;line-height:1.6;color:var(--white);position:relative;z-index:1;max-width:680px}
+.home-statement strong{font-style:normal;font-weight:500;color:var(--white)}
+
+/* proof strip */
+.proof-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:80px 0}
+.proof-item{padding:32px 28px;border:.5px solid var(--border);background:var(--mid);text-align:center}
+.proof-num{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:.04em;line-height:1;display:block;margin-bottom:8px}
+.proof-label{font-size:12px;color:var(--dim);line-height:1.5}
+
+/* ── ELITE PAGE ───────────────────────────────────────────── */
+.elite-hero{padding:100px 0 64px}
+.elite-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--elite);display:block;margin-bottom:28px}
+.elite-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,9vw,110px);line-height:.92;letter-spacing:.015em;margin-bottom:36px}
+.elite-headline em{font-style:normal;color:var(--elite)}
+.elite-body{font-size:18px;font-weight:300;color:var(--dim2);max-width:580px;line-height:1.75}
+
+/* deliverables */
+.deliverable-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:64px 0}
+.deliverable{
+  padding:28px 28px 32px;background:var(--mid);border:.5px solid var(--border);
+  position:relative;overflow:hidden;transition:background .2s;
+}
+.deliverable::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--elite);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.deliverable:hover::before{transform:scaleX(1)}
+.deliverable:hover{background:rgba(212,150,42,0.04)}
+.d-num{font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--elite);letter-spacing:0.1em;margin-bottom:14px;display:block;opacity:.6}
+.d-title{font-size:16px;font-weight:500;margin-bottom:10px;line-height:1.3}
+.d-body{font-size:13px;color:var(--dim);line-height:1.65}
+
+/* io rows */
+.io-grid{display:flex;flex-direction:column;gap:2px}
+.io-row{display:grid;grid-template-columns:1fr 28px 1fr;align-items:stretch}
+.io-left{background:var(--mid2);padding:14px 18px;border-left:.5px solid var(--border);border-top:.5px solid var(--border)}
+.io-right{background:rgba(212,150,42,0.05);padding:14px 18px;border-right:.5px solid var(--border);border-top:.5px solid var(--border)}
+.io-row:last-child .io-left,.io-row:last-child .io-mid,.io-row:last-child .io-right{border-bottom:.5px solid var(--border)}
+.io-mid{background:var(--black);display:flex;align-items:center;justify-content:center;color:var(--elite);font-size:11px;border-top:.5px solid var(--border)}
+.io-tag{font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:3px}
+.io-tag.dim{color:var(--dim)}.io-tag.gold{color:var(--elite)}
+.io-text{font-size:12.5px;line-height:1.5}
+.io-left .io-text{color:rgba(245,243,238,0.65)}
+.io-right .io-text{color:var(--white)}
+
+/* elite cta */
+.elite-cta{display:flex;flex-direction:column;align-items:flex-start;gap:20px;padding:80px 0}
+.elite-cta-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,72px);line-height:.95;letter-spacing:.02em}
+.elite-cta-sub{font-size:15px;color:var(--dim);max-width:460px;line-height:1.65}
+.btn-elite{background:var(--elite);color:var(--black);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:18px 44px;border:none;cursor:pointer;transition:background .2s,transform .15s;text-decoration:none;display:inline-block}
+.btn-elite:hover{background:var(--elite-l);transform:translateY(-1px)}
+.fine-print{font-size:11px;color:var(--dim);letter-spacing:.04em}
+
+/* ── HOW IT WORKS PAGE ────────────────────────────────────── */
+.how-hero{padding:100px 0 64px}
+.how-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,9vw,96px);line-height:.92;letter-spacing:.02em;margin-bottom:32px}
+.how-sub{font-size:17px;color:var(--dim);max-width:560px;line-height:1.7;border-left:1px solid rgba(245,243,238,0.12);padding-left:20px;margin-bottom:64px}
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:80px}
+.comp-col{padding:36px 32px}
+.comp-col.theirs{background:var(--mid);opacity:.7}
+.comp-col.ours{background:rgba(245,243,238,0.02);border:.5px solid var(--border)}
+.comp-label{font-size:10px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:20px;display:block}
+.theirs .comp-label{color:var(--dim)}.ours .comp-label{color:var(--elite)}
+.comp-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.04em;margin-bottom:24px}
+.theirs .comp-title{color:rgba(245,243,238,0.35)}.ours .comp-title{color:var(--white)}
+.comp-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.comp-list li{font-size:13px;line-height:1.5;display:flex;gap:10px;align-items:flex-start}
+.theirs .comp-list li{color:var(--dim)}.ours .comp-list li{color:var(--white)}
+.comp-list li::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.theirs .comp-list li::before{background:rgba(245,243,238,0.15)}
+.ours .comp-list li::before{background:var(--elite)}
+
+/* ── COMING SOON PAGE ─────────────────────────────────────── */
+.cs-page{padding:140px 0 80px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px}
+.cs-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim)}
+.cs-headline{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,8vw,88px);line-height:.92;letter-spacing:.02em}
+.cs-sub{font-size:16px;color:var(--dim);max-width:480px;line-height:1.7;text-align:center}
+.cs-input-row{display:flex;gap:0;max-width:420px;width:100%;margin-top:16px}
+.cs-input{flex:1;background:var(--mid);border:.5px solid var(--border);color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;padding:14px 18px;outline:none;transition:border-color .2s;border-right:none}
+.cs-input:focus{border-color:rgba(245,243,238,0.3)}
+.cs-input::placeholder{color:var(--dim)}
+.cs-submit{padding:14px 24px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;transition:opacity .2s}
+.cs-submit:hover{opacity:.85}
+
+/* ── MOBILE ───────────────────────────────────────────────── */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--white);transition:all .3s}
+.mobile-menu{display:none;position:fixed;inset:64px 0 0 0;background:var(--black);z-index:99;padding:32px 24px;flex-direction:column;gap:4px;border-top:.5px solid var(--border)}
+.mobile-menu.open{display:flex}
+.mobile-link{font-size:13px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);padding:16px 0;border-bottom:.5px solid var(--border);cursor:pointer;transition:color .2s}
+.mobile-link:hover{color:var(--white)}
+
+@media(max-width:768px){
+  #nav{padding:0 24px}
+  .nav-links,.nav-signin{display:none}
+  .hamburger{display:flex}
+  .container{padding:0 24px}
+  .product-grid{grid-template-columns:1fr}
+  .deliverable-grid{grid-template-columns:1fr}
+  .comp-grid{grid-template-columns:1fr}
+  .comp-col.theirs{display:none}
+  .proof-strip{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  #footer{padding:48px 24px 32px}
+  .home-statement{padding:36px 24px}
+  .io-row{grid-template-columns:1fr 20px 1fr}
+  .cs-input-row{flex-direction:column}
+  .cs-input{border-right:.5px solid var(--border);border-bottom:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a class="nav-logo" onclick="navigate('home')">
+    <svg viewBox="0 0 220 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- double bar mark -->
+      <rect x="0" y="0" width="5" height="44" rx="1" fill="#F5F3EE"/>
+      <rect x="9" y="5" width="5" height="39" rx="1" fill="#F5F3EE" opacity="0.4"/>
+      <!-- FUEL FORM wordmark -->
+      <text x="22" y="34" font-family="'Bebas Neue',sans-serif" font-size="38" fill="#F5F3EE" letter-spacing="2">FUEL FORM</text>
+      <!-- tagline -->
+      <text x="23" y="43" font-family="'DM Sans',sans-serif" font-size="8" fill="#F5F3EE" opacity="0.4" letter-spacing="3">PERFORMANCE NUTRITION</text>
+    </svg>
+  </a>
+
+  <div class="nav-links" id="nav-links">
+    <a class="nav-link" onclick="navigate('elite')" data-page="elite">Elite Athletes</a>
+    <a class="nav-link" onclick="navigate('lifestyle')" data-page="lifestyle">Lifestyle</a>
+    <a class="nav-link" onclick="navigate('bodybuilding')" data-page="bodybuilding">Bodybuilding</a>
+    <a class="nav-link" onclick="navigate('teams')" data-page="teams">Teams</a>
+    <a class="nav-link" onclick="navigate('how')" data-page="how">How It Works</a>
+  </div>
+
+  <div class="nav-right">
+    <a class="nav-signin" href="#">Sign In</a>
+    <a class="nav-cta" onclick="navigate('elite')">Get Your Plan</a>
+  </div>
+
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a class="mobile-link" onclick="navigate('elite');toggleMenu()">Elite Athletes</a>
+  <a class="mobile-link" onclick="navigate('lifestyle');toggleMenu()">Lifestyle <span class="cs-badge" style="font-size:9px;color:var(--dim);border:.5px solid var(--border);padding:2px 6px;margin-left:6px">Soon</span></a>
+  <a class="mobile-link" onclick="navigate('bodybuilding');toggleMenu()">Bodybuilding <span class="cs-badge" style="font-size:9px;color:var(--dim);border:.5px solid var(--border);padding:2px 6px;margin-left:6px">Soon</span></a>
+  <a class="mobile-link" onclick="navigate('teams');toggleMenu()">Teams <span class="cs-badge" style="font-size:9px;color:var(--dim);border:.5px solid var(--border);padding:2px 6px;margin-left:6px">Soon</span></a>
+  <a class="mobile-link" onclick="navigate('how');toggleMenu()">How It Works</a>
+</div>
+
+<!-- ── PAGE ── -->
+<div id="page"></div>
+
+<!-- ── FOOTER ── -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <svg viewBox="0 0 220 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="5" height="44" rx="1" fill="#F5F3EE"/>
+          <rect x="9" y="5" width="5" height="39" rx="1" fill="#F5F3EE" opacity="0.4"/>
+          <text x="22" y="34" font-family="'Bebas Neue',sans-serif" font-size="38" fill="#F5F3EE" letter-spacing="2">FUEL FORM</text>
+          <text x="23" y="43" font-family="'DM Sans',sans-serif" font-size="8" fill="#F5F3EE" opacity="0.4" letter-spacing="3">PERFORMANCE NUTRITION</text>
+        </svg>
+        <p class="footer-tagline" style="margin-top:16px">AI-generated performance nutrition plans built around your sport, your body, and your schedule.</p>
+      </div>
+      <div>
+        <span class="footer-col-label">Products</span>
+        <a class="footer-link" onclick="navigate('elite')">Elite Athletes</a>
+        <a class="footer-link" onclick="navigate('lifestyle')">Lifestyle <span class="cs-badge">Coming Soon</span></a>
+        <a class="footer-link" onclick="navigate('bodybuilding')">Bodybuilding <span class="cs-badge">Coming Soon</span></a>
+        <a class="footer-link" onclick="navigate('teams')">Teams <span class="cs-badge">Coming Soon</span></a>
+      </div>
+      <div>
+        <span class="footer-col-label">Company</span>
+        <a class="footer-link" onclick="navigate('how')">How It Works</a>
+        <a class="footer-link" href="#">Sign In</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-legal">Fuel Form plans are AI-generated evidence-based nutrition frameworks, not a substitute for individualized medical or dietetic advice. Always consult a licensed Registered Dietitian or physician before making significant dietary changes.</p>
+      <span class="footer-copy">© 2026 Fuel Form</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── ROUTER ────────────────────────────────────────────── */
+let currentPage = 'home';
+
+function navigate(page) {
+  currentPage = page;
+  window.scrollTo(0,0);
+  renderPage();
+  updateNav();
+}
+
+function updateNav() {
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.remove('active','active-elite');
+  });
+  const active = document.querySelector(`.nav-link[data-page="${currentPage}"]`);
+  if (active) {
+    active.classList.add(currentPage === 'elite' ? 'active-elite' : 'active');
+  }
+}
+
+function toggleMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+/* ── PAGE TEMPLATES ────────────────────────────────────── */
+function renderPage() {
+  const page = document.getElementById('page');
+  switch(currentPage) {
+    case 'home': page.innerHTML = homePage(); break;
+    case 'elite': page.innerHTML = elitePage(); break;
+    case 'how': page.innerHTML = howPage(); break;
+    case 'lifestyle': page.innerHTML = comingSoonPage('lifestyle'); break;
+    case 'bodybuilding': page.innerHTML = comingSoonPage('bodybuilding'); break;
+    case 'teams': page.innerHTML = comingSoonPage('teams'); break;
+    default: page.innerHTML = homePage();
+  }
+}
+
+/* ── HOME ──────────────────────────────────────────────── */
+function homePage() {
+  return `
+  <div class="container">
+    <div class="home-hero">
+      <span class="home-eyebrow anim anim-1">Performance nutrition — built differently</span>
+      <h1 class="home-headline anim anim-2">Fuel<br>with<br>intention.</h1>
+      <p class="home-sub anim anim-3">Personalized nutrition plans built around your sport, your body, your schedule, and your goals. Not a template. Not a guess. A system designed for you.</p>
+    </div>
+
+    <div class="product-grid anim anim-4">
+
+      <div class="product-card" onclick="navigate('elite')">
+        <div class="pc-accent" style="background:var(--elite)"></div>
+        <span class="pc-tag" style="color:var(--elite)">Elite Athlete</span>
+        <div class="pc-title">Competition-level nutrition</div>
+        <div class="pc-user">User: The Athlete</div>
+        <p class="pc-sub">Built around your sport, position, schedule, and training load. Separate targets for training days, rest days, lift days, and game days.</p>
+        <span class="pc-cta" style="color:var(--elite)">Get your plan →</span>
+      </div>
+
+      <div class="product-card coming">
+        <div class="pc-accent" style="background:var(--lifestyle)"></div>
+        <span class="pc-tag" style="color:var(--lifestyle)">Lifestyle <span class="pc-cs">Coming Soon</span></span>
+        <div class="pc-title" style="color:rgba(245,243,238,0.5)">Everyday performance</div>
+        <div class="pc-user">User: The Individual</div>
+        <p class="pc-sub">Nutrition that fits how you actually live, train, and eat. Built around your goals without the competitive athlete structure.</p>
+        <span class="pc-cta" style="color:var(--dim)" onclick="event.stopPropagation();navigate('lifestyle')">Notify me →</span>
+      </div>
+
+      <div class="product-card coming">
+        <div class="pc-accent" style="background:var(--teams)"></div>
+        <span class="pc-tag" style="color:var(--teams)">Teams <span class="pc-cs">Coming Soon</span></span>
+        <div class="pc-title" style="color:rgba(245,243,238,0.5)">Roster onboarding</div>
+        <div class="pc-user">User: Coach or AD</div>
+        <p class="pc-sub">Position-specific plans for every athlete on your roster. Built for coaches who want their team fueling with intention.</p>
+        <span class="pc-cta" style="color:var(--dim)" onclick="event.stopPropagation();navigate('teams')">Notify me →</span>
+      </div>
+
+    </div>
+
+    <div class="home-statement anim anim-5">
+      <p>Most athletes train with intention. Very few fuel with intention. <strong>This closes that gap — giving you the structure, the timing, the targets, and the science to make every meal count toward the athlete you are trying to become.</strong></p>
+    </div>
+
+    <div class="proof-strip anim anim-6">
+      <div class="proof-item">
+        <span class="proof-num" style="color:var(--elite)">24 hrs</span>
+        <div class="proof-label">Plan delivered to your inbox within 24 hours of intake submission</div>
+      </div>
+      <div class="proof-item">
+        <span class="proof-num" style="color:var(--elite)">14 days</span>
+        <div class="proof-label">One free revision window — if anything does not fit, we adjust it</div>
+      </div>
+      <div class="proof-item">
+        <span class="proof-num" style="color:var(--elite)">100%</span>
+        <div class="proof-label">Built around you — your sport, your body, your food, your schedule</div>
+      </div>
+    </div>
+
+  </div>`;
+}
+
+/* ── ELITE ─────────────────────────────────────────────── */
+function elitePage() {
+  const deliverables = [
+    ['Exact calorie targets for every type of day','Training days, rest days, lift days, and game days each have different energy demands. Your plan gives you a specific number for each — not one number for all of them.'],
+    ['Meals timed to your actual schedule','Your plan places meals at real times around your school, work, and practice schedule. Not "eat before training" — eat at 2:30 PM, here is what and why.'],
+    ['Macros built for your specific goal','Building muscle, losing fat, peaking for competition, or recovering from injury — each goal requires a different macro structure, calculated from your body weight and objective.'],
+    ['Game day and competition protocol','Pre-game meal timing, warm-up nutrition, halftime fueling, and post-game recovery. Your performance on the day that counts is determined by what you ate in the 48 hours before it.'],
+    ['Evidence-graded supplement stack','Every supplement recommendation is graded by the quality of evidence behind it. No filler. No hype. Only what fills a genuine gap in your diet at your training volume.'],
+    ['Hydration protocol adjusted for your environment','Your sweat rate changes dramatically based on heat, humidity, and session length. Specific fluid and electrolyte targets built for where and how you train.'],
+    ['Injury prevention and recovery nutrition','Collagen timing before loading, anti-inflammatory food emphasis, adjusted protein targets for tissue repair. Pre-season is the highest injury-risk phase — your plan addresses that directly.'],
+    ['Food you will actually eat','Built around your allergies, restrictions, and real eating habits. Every meal option is something you can put on your plate — not an idealized list that ignores your actual life.'],
+  ];
+
+  const ioRows = [
+    ['Biological sex, date of birth, height, weight','Exact BMR using Harris-Benedict — the mathematical foundation of every calorie target in your plan'],
+    ['Sport and position','Sport-specific activity multiplier — a CDM covering 10km per session is calculated differently than a powerlifter doing 45 minutes of heavy lifts'],
+    ['Season phase','Periodized calorie and carbohydrate targets — pre-season high intensity demands more fuel than off-season maintenance'],
+    ['Daily schedule — school, work, practice times','Meals placed at exact clock times around your day — not relative timing guidelines but a schedule that fits your actual life'],
+    ['Lift days per week','Separate lift day targets — 300–400 additional calories, higher protein ceiling, post-lift recovery window, and creatine timing'],
+    ['Game days and competition schedule','Full competition day protocol — pre-game meal timing, warm-up nutrition, halftime fueling, and post-game recovery window'],
+    ['Training environment — outdoor heat, indoor, mixed','Hydration targets adjusted for sweat rate — outdoor summer training adds up to 1.5L of loss per hour, which changes your entire protocol'],
+    ['Injury or recovery status','Targeted recovery nutrition — collagen and vitamin C timing, anti-inflammatory food emphasis, adjusted protein for tissue repair'],
+    ['Primary goals','Macro structure built for your outcome — muscle gain means a calculated surplus; fat loss means a deficit with muscle-sparing protein targets'],
+    ['A typical day of eating','Recommendations built on your real food environment — what you already eat, what gaps exist, what needs to change, and what stays'],
+    ['Allergies, restrictions, and food dislikes','A plan with zero foods you cannot or will not eat — every meal option is something you can actually put on your plate'],
+    ['Supplements currently taking','A stack that fills actual gaps — no duplicating what you already take, nothing your lifestyle cannot realistically support'],
+    ['Sleep and medical background','Sleep nutrition protocol — casein timing, magnesium glycinate, and recovery foods that work with your body\'s overnight muscle protein synthesis window'],
+  ];
+
+  return `
+  <div class="container">
+    <div class="elite-hero">
+      <span class="elite-eyebrow anim anim-1">Personalized performance nutrition</span>
+      <h1 class="elite-headline anim anim-2">Eat like your<br>goals <em>matter.</em></h1>
+      <p class="elite-body anim anim-3">A personalized fueling plan built around your sport, your body, your schedule, and your goals. Not a template. Not a guess. A system designed specifically for you — delivered within 24 hours.</p>
+    </div>
+
+    <div class="divider anim anim-4">
+      <div class="divider-line"></div>
+      <span class="divider-label">What your plan includes</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="deliverable-grid">
+      ${deliverables.map((d,i)=>`
+      <div class="deliverable anim anim-${Math.min(i+1,6)}">
+        <span class="d-num">0${i+1}</span>
+        <div class="d-title">${d[0]}</div>
+        <div class="d-body">${d[1]}</div>
+      </div>`).join('')}
+    </div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-label">How every answer becomes your plan</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="io-grid">
+      ${ioRows.map(r=>`
+      <div class="io-row">
+        <div class="io-left"><span class="io-tag dim">You tell us</span><span class="io-text">${r[0]}</span></div>
+        <div class="io-mid">→</div>
+        <div class="io-right"><span class="io-tag gold">Your plan gets</span><span class="io-text">${r[1]}</span></div>
+      </div>`).join('')}
+    </div>
+
+    <div class="home-statement" style="border-color:rgba(212,150,42,0.2);background:rgba(212,150,42,0.03);margin:80px 0">
+      <p>A BMR calculator tells you how many calories exist at your weight. <strong>This plan tells you what to eat, when to eat it, why it matters for your sport, and how to adjust it on the days that count most.</strong> That is the difference between a number and a system.</p>
+    </div>
+
+    <div class="proof-strip" style="margin-bottom:0">
+      <div class="proof-item">
+        <span class="proof-num" style="color:var(--elite)">24 hrs</span>
+        <div class="proof-label">Delivered to your inbox within 24 hours of submission</div>
+      </div>
+      <div class="proof-item">
+        <span class="proof-num" style="color:var(--elite)">$149</span>
+        <div class="proof-label">One plan, one athlete, built entirely around you</div>
+      </div>
+      <div class="proof-item">
+        <span class="proof-num" style="color:var(--elite)">14 days</span>
+        <div class="proof-label">One free revision included within 14 days of delivery</div>
+      </div>
+    </div>
+
+    <div class="elite-cta">
+      <h2 class="elite-cta-headline">Your plan.<br>Built for you.</h2>
+      <p class="elite-cta-sub">Complete a detailed athlete profile and receive a fully personalized performance nutrition plan within 24 hours. One revision included.</p>
+      <a href="#" class="btn-elite">Get your plan — $149</a>
+      <span class="fine-print">One revision within 14 days &nbsp;·&nbsp; Delivered within 24 hours &nbsp;·&nbsp; Built around your sport, body, and goals</span>
+    </div>
+  </div>`;
+}
+
+/* ── HOW IT WORKS ──────────────────────────────────────── */
+function howPage() {
+  return `
+  <div class="container">
+    <div class="how-hero">
+      <span class="elite-eyebrow anim anim-1" style="color:var(--dim)">Performance nutrition — built differently</span>
+      <h1 class="how-headline anim anim-2">This is not a<br><span style="color:var(--elite)">BMR calculator.</span></h1>
+      <p class="how-sub anim anim-3">A BMR calculator gives everyone with your height and weight the same number. We build a plan around your sport, your position, your schedule, your goals, and how your body actually performs.</p>
+    </div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-label">The difference</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="comp-grid anim anim-4">
+      <div class="comp-col theirs">
+        <span class="comp-label">Generic calculator</span>
+        <div class="comp-title">One number.<br>No context.</div>
+        <ul class="comp-list">
+          <li>Same output for every athlete at your weight</li>
+          <li>No sport or position considered</li>
+          <li>No training schedule or season phase</li>
+          <li>No meal timing — just a daily calorie number</li>
+          <li>No supplement guidance</li>
+          <li>No game day or lift day adjustments</li>
+          <li>No hydration protocol</li>
+          <li>No injury or recovery considerations</li>
+        </ul>
+      </div>
+      <div class="comp-col ours">
+        <span class="comp-label">Your fueling plan</span>
+        <div class="comp-title">Built around<br>your life.</div>
+        <ul class="comp-list">
+          <li>Calorie targets specific to your sport and position</li>
+          <li>Separate targets for training, rest, lift, and game days</li>
+          <li>Meals timed to your exact daily schedule</li>
+          <li>Evidence-graded supplement stack for your training load</li>
+          <li>Game day and competition nutrition protocol</li>
+          <li>Hydration targets adjusted for training environment and heat</li>
+          <li>Injury prevention and recovery nutrition</li>
+          <li>Foods you will actually eat — built around your restrictions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="home-statement" style="margin:0 0 80px">
+      <p>A BMR calculator tells you how many calories exist at your weight. <strong>This plan tells you what to eat, when to eat it, why it matters for your sport, and how to adjust it on the days that count most.</strong> That is the difference between a number and a system.</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:20px;padding-bottom:80px">
+      <h2 class="elite-cta-headline">Ready to fuel<br>with intention?</h2>
+      <p class="elite-cta-sub">Your personalized performance nutrition plan is built around your sport, your body, your schedule, and your goals. Delivered within 24 hours.</p>
+      <a href="#" class="btn-elite" onclick="navigate('elite')">Get your plan — $149</a>
+      <span class="fine-print">One revision within 14 days &nbsp;·&nbsp; Delivered within 24 hours</span>
+    </div>
+  </div>`;
+}
+
+/* ── COMING SOON ───────────────────────────────────────── */
+function comingSoonPage(type) {
+  const config = {
+    lifestyle: {
+      color: 'var(--lifestyle)',
+      label: 'Lifestyle',
+      headline: 'Everyday\nperformance.',
+      sub: 'Nutrition that fits how you actually live, train, and eat. No competitive athlete structure required. Built around your goals, your schedule, and your real food environment.',
+      user: 'For the active individual'
+    },
+    bodybuilding: {
+      color: 'var(--body)',
+      label: 'Bodybuilding',
+      headline: 'Built to\ncompete.',
+      sub: 'Contest prep, lean bulk, recomposition, and peak week protocols. Every macro calculated for your stage, your timeline, and your division.',
+      user: 'For the physique athlete'
+    },
+    teams: {
+      color: 'var(--teams)',
+      label: 'Teams',
+      headline: 'Roster-level\nnutrition.',
+      sub: 'Position-specific plans for every athlete on your roster. Built for coaches and athletic directors who want their team fueling with intention.',
+      user: 'For coaches and athletic directors'
+    }
+  };
+  const c = config[type];
+  const lines = c.headline.split('\n');
+
+  return `
+  <div class="container">
+    <div class="cs-page">
+      <span class="cs-eyebrow anim anim-1" style="color:${c.color}">${c.label}</span>
+      <h1 class="cs-headline anim anim-2">${lines.map(l=>`<span style="color:${c.color}">${l}</span>`).join('<br>')}</h1>
+      <p style="font-size:10px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--dim)" class="anim anim-3">${c.user}</p>
+      <p class="cs-sub anim anim-4">${c.sub}</p>
+
+      <div class="cs-input-row anim anim-5">
+        <input class="cs-input" type="email" placeholder="your@email.com" id="cs-email-${type}">
+        <button class="cs-submit" style="background:${c.color};color:var(--black)" onclick="handleNotify('${type}')">Notify me</button>
+      </div>
+
+      <p class="anim anim-6" style="font-size:11px;color:var(--dim);margin-top:-8px">Be the first to know when this launches. No spam.</p>
+
+      <div style="margin-top:64px;padding-top:48px;border-top:.5px solid var(--border);width:100%;text-align:left" class="anim anim-6">
+        <p style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);margin-bottom:24px">While you wait</p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <a class="btn-elite" onclick="navigate('elite')" style="font-size:11px;padding:14px 28px">View Elite Athlete plan →</a>
+          <a class="btn-elite" onclick="navigate('how')" style="font-size:11px;padding:14px 28px;background:transparent;color:var(--white);border:.5px solid var(--border)">How it works →</a>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function handleNotify(type) {
+  const input = document.getElementById(`cs-email-${type}`);
+  if (!input || !input.value.includes('@')) {
+    input.style.borderColor = '#e57373';
+    return;
+  }
+  input.style.borderColor = 'var(--border)';
+  input.value = '';
+  input.placeholder = 'You\'re on the list.';
+  input.disabled = true;
+}
+
+/* ── INIT ──────────────────────────────────────────────── */
+renderPage();
+updateNav();
+</script>
+</body>
+</html>
